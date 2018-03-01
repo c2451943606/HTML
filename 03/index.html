@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>天气应用</title>
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.5/angular.min.js"></script> -->
+
+  
+  <style type="text/css">
+    img{margin:0 auto;}
+    a{display: inline-block;}
+    h1{display: inline-block;vertical-align: 8px;color: orange;}
+  </style>
+
+
+ <!--  <script>
+   var app = angular.module('Weather', []);
+	   app.factory('WeatherApi', function($http) {
+    	var obj = {};
+    	obj.getIP  = function() {
+      	return $http.jsonp("http://ipinfo.io/json?callback=JSON_CALLBACK");
+    	}
+    	obj.getCurrent = function(ip) {
+  	    var api = "http://v.juhe.cn/weather/ip?format=1";
+  	    var APPKey = "&key=dd0765af20d40a69cd17b8d0b1fb7aec&ip=";
+  	    var cb = "&callback=JSON_CALLBACK";
+        console.log($http.jsonp(api + APPKey + ip + cb));
+  	    	return $http.jsonp(api + APPKey + ip + cb);
+    	};
+  	 return obj
+	 });
+
+	app.controller('MainCtrl', function($scope, WeatherApi) {
+	  $scope.Data = {};
+	  WeatherApi.getIP().success(function(data){
+	    var ip = data.ip;
+	    WeatherApi.getCurrent(ip).success(function(data) {
+	      $scope.Data = data.result;
+	      $scope.items= data.result.future;
+	      delete $scope.items[Object.keys($scope.items)[0]];
+	    });
+	  })
+	});
+  </script> -->
+
+
+  <script type="text/javascript">
+		var title='',artist='',mp3='',cover='';
+		
+		function getjson (){
+			$.ajax({
+				url:'test.php',
+				success: function(r){
+					if (typeof r === 'string') {
+						//得到的是字符串 
+				      	//parse() JSON.parse() 方法用来解析JSON字符串，构造由字符串描述的JavaScript值或对象。提供可选的reviver函数用以在返回之前对所得到的对象执行变换(操作)。
+				      	//简单一点说就是吧字符串变成json对象
+				    r = JSON.parse(r); 
+				  }
+				  // for(var i in r){
+				  // 	console.log("key="+i);
+				  // }
+				  console.log(r);
+				  $('#city').append(r.city);
+				  $('#week').append(r.data.forecast[0].date);
+				  $('#date_y').append(r.date);
+
+				  $('#high').append(r.data.forecast[0].high);
+				  $('#low').append(r.data.forecast[0].low);
+				  $('#sunrise').append(r.data.forecast[0].sunrise);
+				  $('#sunset').append(r.data.forecast[0].sunset);
+				  $('#aqi').append(r.data.forecast[0].aqi);
+				  $('#fx').append(r.data.forecast[0].fx);
+				  $('#fl').append(r.data.forecast[0].fl);
+				  $('#type').append(r.data.forecast[0].type);
+				  $('#notice').append(r.data.forecast[0].notice);
+				  // $('#date_y').append(r.date);
+
+
+				 	for(var key in r.data.forecast){
+				 		$('#future').append("<===============================================================================>");
+				 		for(var keys in r.data.forecast[key]){
+				 			// console.log(keys);
+				 			var txt1="<p>"+r.data.forecast[key][keys]+"</p>"
+				 			$('#future').append(txt1);
+				 			console.log(r.data.forecast[key][keys]);
+				 		}
+				 	}
+				  // console.log(Object.keys(r));
+
+				  // for (var i = 0; i < r.music.length; i++) {
+				  // 	title=r.music[i].title;
+					 //  artist=r.music[i].artist;
+					 //  mp3=r.music[i].mp3;
+					 //  cover=r.music[i].cover;
+					 //  // console.log(i);
+					 //  // console.log('<=================================>');
+					 //  // console.log(title);
+					 //  // console.log(artist);
+					 //  // console.log(mp3);
+					 //  // console.log(cover);
+					 //  // console.log('<=================================>');
+				  // }
+
+
+
+				},
+				error:function(XMLHttpRequest, textStatus, errorThrown) {
+					alert(XMLHttpRequest.status);
+					alert(XMLHttpRequest.statusText)
+					alert(textStatus);
+					alert(errorThrown);
+				}
+			});
+		}
+
+
+
+		$(document).ready(function() {
+			getjson();
+		});
+  </script>
+
+
+</head>
+<body>
+
+  <div class="container">
+    <div class="row">
+      <header class="col-xs-12 text-center">                
+        <h1>天气应用</h1>
+      </header>
+    </div>
+    <div class="col-xs-12 col-md-12">
+      <div class="text-center status">
+        <p id="city">城市：</p>
+        <p id="week">星期：</p>
+        <p id="date_y">日期:</p>
+        <hr>
+        <h4>今天天气</h4>
+        <p id="high"></p>
+        <p id="low"></p>
+        <p id="sunrise">日出:</p>
+        <p id="sunset">日落:</p>
+        <p id="aqi">AQI:</p>
+        <p id="fx">风向:</p>
+        <p id="fl">风力:</p>
+        <p id="type">天气:</p>
+        <p id="notice">留言:</p>
+      </div>
+      <hr>
+    </div>
+    <h4 class="text-center">未来6天天气</h4>
+    <div class="col-xs-12 col-md-12">
+      <div class="text-center status" id="future" >
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
+  
+</body>
+</html>

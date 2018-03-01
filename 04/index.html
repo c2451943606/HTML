@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>AngularJS XMLHttpRequest</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.5/angular.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+
+	<!-- $http 是 AngularJS 中的一个核心服务，用于读取远程服务器的数据。
+使用格式：
+// 简单的 GET 请求，可以改为 POST
+$http({
+    method: 'GET',
+    url: '/someUrl'
+}).then(function successCallback(response) {
+        // 请求成功执行代码
+    }, function errorCallback(response) {
+        // 请求失败执行代码
+});
+
+简写方法
+POST 与 GET 简写方法格式：
+$http.get('/someUrl', config).then(successCallback, errorCallback);
+$http.post('/someUrl', data, config).then(successCallback, errorCallback);
+
+此外还有以下简写方法：
+
+	$http.get
+	$http.head
+	$http.post
+	$http.put
+	$http.delete
+	$http.jsonp
+	$http.patch
+
+AngularJS $http
+AngularJS $http 是一个用于读取web服务器上数据的服务。
+$http.get(url) 是用于读取服务器数据的函数
+
+AngularJS 应用通过 ng-app 定义。应用在 <div> 中执行。
+ng-controller 指令设置了 controller 对象 名。
+函数 customersController 是一个标准的 JavaScript 对象构造器。
+控制器对象有一个属性: $scope.names。
+$http.get() 从web服务器上读取静态 JSON 数据。
+
+当从服务端载入 JSON 数据时，$scope.names 变为一个数组。
+
+ -->
+
+
+<!-- 读取 JSON 文件 -->
+
+  <style type="text/css">
+    img{margin:0 auto;}
+    a{display: inline-block;}
+    h1{display: inline-block;vertical-align: 8px;color: orange;}
+  </style>
+
+
+
+</head>
+<body ng-app="Weather">
+  <div class="container" ng-controller="MainCtrl">
+    <div class="row">
+      <header class="col-xs-12 text-center"">
+        <h1>天气应用</h1>
+      </header>
+    </div>
+    <div class="col-xs-12 col-md-12">
+      <div class="text-center status">
+        <p>城市：{{Data.basic.location}}</p>
+        <p>时间：{{Data.update.loc}}</p>
+        <hr>
+        <h4>今天天气</h4>
+        <p>天气：{{Data.now.cond_txt}}</p>
+        <p>体感温度：{{Data.now.fl}}</p>
+        <p>相对湿度：{{Data.now.hum}}</p>
+        <p>风向：{{Data.now.wind_dir}}</p>
+        <p>风力：{{Data.now.wind_sc}}</p>
+        <p>降水量：{{Data.now.pcpn}}</p>
+        <p>大气压强：{{Data.now.pres}}</p>
+        <p>能见度：{{Data.now.vis}}</p>
+        <p>云量：{{Data.now.cloud}}</p>
+      </div>
+      <hr>
+    </div>
+    <h4 class="text-center">未来3天天气</h4>
+    <div class="col-xs-4 col-md-4" ng-repeat="item in items">
+      <div class="text-center status" >
+        <h5>预报日期：{{item.date}}</h5>
+        <p>日出时间：{{item.sr}}</p>
+        <p>日落时间：{{item.ss}}</p>
+        <p>月升时间：{{item.mr}}</p>
+        <p>月落时间：{{item.ms}}</p>
+        <p>最高温度：{{item.tmp_max}}</p>
+        <p>最低温度：{{item.tmp_min}}</p>
+        <p>白天天气状况描述：{{item.cond_txt_d}}</p>
+        <p>晚间天气状况描述：{{item.cond_txt_n}}</p>
+        <p>风向：{{item.wind_dir}}</p>
+        <p>风力：{{item.wind_sc}}</p>
+        <p>风速：{{item.wind_spd}}</p>
+        <p>相对湿度：{{item.hum}}</p>
+        <p>降水量：{{item.pcpn}}</p>
+        <p>降水概率：{{item.pop}}</p>
+        <p>大气压强：{{item.pres}}</p>
+        <p>紫外线强度指数：{{item.uv_index}}</p>
+        <p>能见度：{{item.vis}}</p>
+      </div>
+    </div>
+  </div>
+
+
+
+	<script type="text/javascript">
+		var app=angular.module('Weather',[]);
+		// 参数
+		// key ="3067d7e9a234484aaa59caae3c9718d8";
+  //   loca = "39.182.130.225";
+  //   curlPost = "key="+key+"&location="+loca;
+
+		// app.controller('siteCtrl',function($scope, $http){
+		// 	$http({
+		// 		method:'GET',
+		// 		url:'https://free-api.heweather.com/s6/weather/now?'+curlPost
+		// 	}).then(function successCallback(response){
+		// 			$scope.names=response.data.ip
+		// 		},function errorCallback(response){
+		// 			// 请求失败执行代码
+		// 		});
+		// });
+
+
+		app.controller('MainCtrl',function($scope, $http){
+			// 参数
+			key ="3067d7e9a234484aaa59caae3c9718d8";
+	    loca = "";
+	    curlPost = "key="+key+"&location=";
+
+			$http.jsonp("http://ipinfo.io/json?callback=JSON_CALLBACK").success(function(data){
+	    	loca = data.ip;
+	    	curlPost=curlPost+loca; 
+
+	    	$http.get('https://free-api.heweather.com/s6/weather/now?'+curlPost).success(function(data){
+					console.log("1:"+curlPost);
+	    		$scope.Data=data.HeWeather6[0];
+	    		console.log($scope.Data)
+	    	});
+
+	    	$http.get('https://free-api.heweather.com/s6/weather/forecast?'+curlPost).success(function(data){
+					console.log("2:"+curlPost);
+	    		$scope.items=data.HeWeather6[0].daily_forecast;
+	    		console.log($scope.item)
+	    	});  	   
+	    });
+
+				 
+		});
+	</script>
+
+	
+</body>
+</html>
